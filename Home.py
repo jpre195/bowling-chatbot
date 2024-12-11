@@ -1,11 +1,24 @@
+import gpt4all as gpt
 from langchain_community.llms import GPT4All
 import streamlit as st
 
 st.title('USBC Chatbot')
 
-llm = GPT4All(
-    model="./qwen2-1_5b-instruct-q4_0.gguf"
-)
+MODEL_NAME = 'orca-mini-3b-gguf2-q4_0.gguf'
+
+if 'model' not in st.session_state:
+
+    with st.spinner('Downloading model'):
+
+        gpt.GPT4All(model_name = MODEL_NAME, model_path = './models')
+        
+    llm = GPT4All(model = f'./models/{MODEL_NAME}')
+
+    st.session_state['model'] = llm
+
+else:
+
+    llm = st.session_state['model']
 
 if 'messages' not in st.session_state:
 
